@@ -1,46 +1,75 @@
-# Getting Started with Create React App
+# ESLint with Prettier and Husky in React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Setting up ESLint with Airbnb style
+1. Create a new `.eslintrc` file with `npm init @eslint/config`
 
-## Available Scripts
+![image](https://github.com/austinnguyen00/ESLint-config/assets/68253549/9d8cf0fa-71a3-4860-8414-19f97350da57)
 
-In the project directory, you can run:
+After creating `.eslintrc.json` file, delete the rules
 
-### `npm start`
+2. Install dependcies for `eslint-config-airbnb`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    - First install eslint airbnb `npx install-peerdeps --dev eslint-config-airbnb`
+    - Then install other dependencies for typescript `npm install eslint-config-airbnb-typescript @typescript-eslint/eslint-plugin@^5.13.0 @typescript-eslint/parser@^5.0.0 --save-dev`
+    
+3. Configure eslint file
+    ```
+    extends: [
+      'airbnb',
+    + 'airbnb-typescript'
+    ]
+    ```
+4. Configure the ESLint TypeScript parser
+    ```
+    {
+      extends: ['airbnb', 'airbnb-typescript'],
+    + parserOptions: {
+    +   project: './tsconfig.json'
+    + }
+    }
+    ```
+5. In package.json, add scripts to lint files
+    ```
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    ```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Setting up Prettier integrated with ESLint
+1. Install packages  
+    ```
+    npm install --save-dev --save-exact prettier
+    npm install --save-dev eslint-config-prettier
+    npm install --save-dev eslint-plugin-prettier
+    ```
+    
+2. Adding Prettier to `.eslintrc.json` config file  
+    ```
+    {
+      "extends": [
+        "some-other-config-you-use",
+        "prettier"
+      ]
+    }
 
-### `npm test`
+    {
+      "plugins": ["prettier"],
+      "rules": {
+        "prettier/prettier": "error"
+      }
+    }
+    ```
+    
+3. Install Prettier extension for VSCode
+4. Turn on auto save in VSCode and Prettier will automatically format the file 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Setting up Husky
+1. One line command for setting up husky automatically
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+    ```
+    npx husky-init and npm install
+    ```
+2. To set our init pre-commit hook to lint files before commit, run
+  
+    ```
+    npx husky set .husky/pre-commit "npm run lint"
+    ```     
